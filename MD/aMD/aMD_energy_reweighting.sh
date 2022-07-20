@@ -41,7 +41,7 @@ go""" > pcas_cpptraj.in
 # STEP 1: RUN CPPTRAJ SCRIPT
 echo "1. Run pcas_cpptraj.in with the following syntax:
 \tFor serial run:   \tcpptraj -f pcas_cpptraj.in
-\tFor parallel run: \tmpirun -np $procs -f pcas_cpptraj.in
+\tFor parallel run: \tmpirun -np $procs cpptraj.MPI -i pcas_cpptraj.in
 This run will take time depending on the lenght of the trajectory.
 Steps 2 and 3 will be automatically done."
 
