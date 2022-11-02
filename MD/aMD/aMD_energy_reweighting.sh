@@ -56,7 +56,7 @@ rm pca12-ca.tmp
 awk 'NR%1==0' amd.log | awk '{print ($8+$7)/(0.001987*300)" " $2 " " ($8+$7)}' > weights.dat
 
 # STEP 4: RUN PyReweighting-2D.py
-python ~/git/pyreweighting/PyReweighting-2D.py -cutoff 10 -input pca12-ca.reduced -T 300 -job amdweight_CE -weight weights.dat -cutoff 1 | tee -a reweight_variable.log
+python $PYREWEIGHT_HOME/PyReweighting-2D.py -cutoff 10 -input pca12-ca.reduced -T 310 -job amdweight_CE -weight weights.dat -cutoff 1 | tee -a reweight_variable.log
 
 # STEP 5: PLOT HEATMAPS
 echo "import numpy as np
