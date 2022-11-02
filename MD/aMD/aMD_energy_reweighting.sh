@@ -1,11 +1,11 @@
 # /bin/bash
 
-
 ##############################################
 # PROTOCOL FOR REWEIGHTING ENERGY IN aMD AND #
 #  PLOT AS HEATMAP CONFRONTING PC1 AND PC2   #
 ##############################################
 
+# PyReweight repo: https://github.com/MiaoLab20/pyreweighting
 
 PYREWEIGHT_HOME=
 # $1 is topology (prmtop)
