@@ -12,6 +12,7 @@ PYREWEIGHT_HOME=
 # $2 is reference frame (initial inpcrd)
 # $3 is last residue number of protein
 # $4 is trajectory files
+# $5 is amd.log file
 
 # CREATE CPPTRAJ SCRIPT WITH GIVEN VARIABLES
 vecs=$(($3*3))
@@ -39,11 +40,12 @@ projection modes evecs-ca.dat out pca12-ca beg 1 end 2 @CA
 go""" > pcas_cpptraj.in
 
 # STEP 1: RUN CPPTRAJ SCRIPT
-echo "1. Run pcas_cpptraj.in with the following syntax:
+echo "1. Run pcas_cpptraj.in using the following syntax:
 \tFor serial run:   \tcpptraj -f pcas_cpptraj.in
 \tFor parallel run: \tmpirun -np $procs cpptraj.MPI -i pcas_cpptraj.in
-This run will take time depending on the lenght of the trajectory.
-Steps 2 and 3 will be automatically done."
+This run will take time depending on the lenght of the trajectory. 
+Re-run the script once finished.
+Steps 2 and 3 will be automatically done ."
 
 # STEP 2: MODIFY CPPTRAJ OUTPUT
 #echo "2. Modify pca12-ca to remove header and first column (which contains the frame number). It will be done automatically."
@@ -53,7 +55,7 @@ awk '{ print $2, $3 }'  pca12-ca.tmp > pca12-ca.reduced
 rm pca12-ca.tmp
 
 # STEP 3: GENERATE weights.dat FOR PyReweight
-awk 'NR%1==0' amd.log | awk '{print ($8+$7)/(0.001987*300)" " $2 " " ($8+$7)}' > weights.dat
+awk 'NR%1==0' $5 | awk '{print ($8+$7)/(0.001987*300)" " $2 " " ($8+$7)}' > weights.dat
 
 # STEP 4: RUN PyReweighting-2D.py
 python $PYREWEIGHT_HOME/PyReweighting-2D.py -cutoff 10 -input pca12-ca.reduced -T 310 -job amdweight_CE -weight weights.dat -cutoff 1 | tee -a reweight_variable.log
