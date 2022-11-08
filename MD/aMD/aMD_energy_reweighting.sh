@@ -95,7 +95,7 @@ echo "def treat_xvg(data, labels):
     
 
 echo "# CE1
-data, labels = load_xvg('pmf-c1-pca12-cai.reduced.xvg')
+data, labels = load_xvg('pmf-c1-pca12-ca.reduced.xvg')
 X, Y, Z = treat_xvg(data, labels)
 
 plt.contourf(X, Y, Z, levels=100, cmap='rainbow')
