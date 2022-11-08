@@ -66,9 +66,7 @@ import pandas as pd
 import matplotlib.pyplot as plt"  > plot_heatmaps.py
 
 echo "def load_xvg(filename):
-    """
-    Function for parsing the contents of a xvg file produced by PyReweighting
-    """
+    # Function for parsing the contents of a xvg file produced by PyReweighting
     
     xvg = open(filename, 'r').readlines()
     
