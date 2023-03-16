@@ -51,9 +51,9 @@ if [ -z "$coordinates" ]; then
 fi
 
 if [[ "csuc local mirfak slar slar-gorn03 slurm" =~ (' '|^)$machine(' '|$) ]];
-then 
+then
     echo
-else 
+else
     echo "Selected machine ($machine) is not configured. Remember that names have to be input in lower case.\n
 Please, use an available config or the default (general SLURM config)."
     exit 1
@@ -84,7 +84,7 @@ echo "minimization of solvent
   imin = 1, maxcyc = 1000,
   ncyc = 500, ntx = 1,
   ntwe = 0, ntwr = 500, ntpr = 100,
-  ntc = 2, 
+  ntc = 2,
   ntf = 2, ntb = 1, ntp = 0,
   cut = 10.0,
   ntr=1, restraintmask = ':1-${last_residue}',
@@ -147,6 +147,7 @@ echo "Minimization of everything excluding backbone
  /" > preprod/5_min.in
 
 echo "1 ns NPT with weak restraint of backbone
+ &cntrl
   imin = 0, nstlim = 500000, dt = 0.002,
   irest = 0, ntx = 1, ig = -1,
   tempi = 310.15, temp0 = ${temperature},
@@ -160,6 +161,7 @@ echo "1 ns NPT with weak restraint of backbone
  /" > preprod/6_npt.in
 
 echo "1 ns NPT with weaker restraint of backbone
+ &cntrl
   imin = 0, nstlim = 500000, dt = 0.002,
   irest = 1, ntx = 5, ig = -1,
   temp0 = ${temperature},
@@ -173,6 +175,7 @@ echo "1 ns NPT with weaker restraint of backbone
  /" > preprod/7_npt.in
 
 echo "1 ns NPT with weakest restraint of backbone
+ &cntrl
   imin = 0, nstlim = 1000000, dt = 0.002,
   irest = 1, ntx = 5, ig = -1,
   temp0 = ${temperature},
@@ -285,7 +288,7 @@ module load amber/20
 " > script.sh
 
 elif [ $machine == 'slar' ]
-then 
+then
     echo "#!/bin/bash
 
 #SBATCH --job-name=$jobname
@@ -301,7 +304,7 @@ module load gcc/4.8.5/openmpi/4.1.1/cuda/11.1.1/amber/20.gorn04
 " > script.sh
 
 elif [ $machine == 'slar-gorn03' ]
-then 
+then
     echo "#!/bin/bash
 
 #SBATCH --job-name=$jobname
@@ -318,7 +321,7 @@ module load gcc/4.8.5/openmpi/2.0.1/cuda/8.0/amber/18
 
 
 elif [ $machine == 'slurm' ]
-then 
+then
     echo "#!/bin/bash
 
 #SBATCH --job-name=$jobname
@@ -330,7 +333,7 @@ then
 #SBATCH --gres=gpu:1
 
 ### LOAD MODULE ###
-module load 
+module load
 " > script.sh
 fi
 
@@ -438,7 +441,7 @@ fi
 if [ $submit -eq 1 ]
 then
     if [[ "csuc mirfak slar slar-gorn03" =~ (' '|^)$machine(' '|$) ]];
-    then 
+    then
         sbatch script.sh
     fi
 fi
