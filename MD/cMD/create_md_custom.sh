@@ -223,7 +223,7 @@ echo "NVT production. 10 ns MD per step
   cut = 9.0, iwrap = 1,
   ntt =3, gamma_ln=3.0, ntb = 2, ntp = 0,
   ioutfm=1, ntxo=1,
-/" > prod/prod_01.in
+/" > prod/prod_1.in
 
 echo "NVT production. 10 ns MD per step
  &cntrl
