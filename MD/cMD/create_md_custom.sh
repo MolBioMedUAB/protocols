@@ -401,7 +401,7 @@ then
     echo 'starting sixth NPT \(step 9\)'
     pmemd.cuda -O -i 9_npt.in\\
                 -o out/9_npt.out -p ../\$prmtop -c out/8_npt.rst -r out/9_npt.rst\\
-                -inf out/8_npt.info -ref out/8_npt.rst -x out/9_npt.nc
+                -inf out/9_npt.info -ref out/8_npt.rst -x out/9_npt.nc
 
     echo 'starting NVT equilibration \(step 10\)'
     pmemd.cuda -O -i 10_nvt.in\\
@@ -414,7 +414,7 @@ then
     cd prod
     if [ \$copy_preprod -eq 1 ]
     then
-        cp ../preprod/10_nvt.rst .
+        cp ../preprod/out/10_nvt.rst .
     fi
 
     while [ \${cnt} -le \${cntmax} ]
