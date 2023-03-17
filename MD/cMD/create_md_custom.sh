@@ -433,6 +433,7 @@ then
         fi
 
         cnt=\$((\$cnt + 1))
+        echo "Step ${cnt} of ${cntmax} of production done"
     done
 fi
 " >> script.sh
