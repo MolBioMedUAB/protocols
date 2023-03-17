@@ -208,7 +208,7 @@ echo "NVT equilibration. 5 ns MD
   ntc = 2, ntf = 2, tol = 0.00001,
   ntwx = 5000, ntwe = 0, ntwr = 5000, ntpr = 5000,
   cut = 9.0, iwrap = 1,
-  ntt =3, gamma_ln=3.0, ntb = 2, ntp = 0,
+  ntt =3, gamma_ln=3.0, ntb = 1, ntp = 0,
   ioutfm=1, ntxo=1,
 /" > preprod/10_nvt.in
 
@@ -221,7 +221,7 @@ echo "NVT production. 10 ns MD per step
   ntc = 2, ntf = 2, tol = 0.00001,
   ntwx = 5000, ntwe = 0, ntwr = 5000, ntpr = 5000,
   cut = 9.0, iwrap = 1,
-  ntt =3, gamma_ln=3.0, ntb = 2, ntp = 0,
+  ntt =3, gamma_ln=3.0, ntb = 1, ntp = 0,
   ioutfm=1, ntxo=1,
 /" > prod/prod_1.in
 
@@ -233,7 +233,7 @@ echo "NVT production. 10 ns MD per step
   ntc = 2, ntf = 2, tol = 0.00001,
   ntwx = 5000, ntwe = 0, ntwr = 5000, ntpr = 5000,
   cut = 9.0, iwrap = 1,
-  ntt =3, gamma_ln=3.0, ntb = 2, ntp = 0,
+  ntt =3, gamma_ln=3.0, ntb = 1, ntp = 0,
   ioutfm=1, ntxo=1,
 /" > prod/prod.in
 
@@ -401,12 +401,12 @@ then
     echo 'starting sixth NPT \(step 9\)'
     pmemd.cuda -O -i 9_npt.in\\
                 -o out/9_npt.out -p ../\$prmtop -c out/8_npt.rst -r out/9_npt.rst\\
-                -inf out/9_npt.info -ref out/8_npt.rst -x out/9_npt.nc
+                -inf 9_npt.info -ref out/8_npt.rst -x out/9_npt.nc
 
     echo 'starting NVT equilibration \(step 10\)'
     pmemd.cuda -O -i 10_nvt.in\\
                 -o out/10_nvt.out -p ../\$prmtop -c out/9_npt.rst -r out/10_nvt.rst\\
-                -inf out/10_nvt.info -ref out/9_npt.rst -x out/10_nvt.nc
+                -inf 10_nvt.info -ref out/9_npt.rst -x out/10_nvt.nc
 fi
 
 if [ \$prod -eq 1 ];
