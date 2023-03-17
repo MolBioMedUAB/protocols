@@ -263,7 +263,7 @@ then
 #SBATCH -t 10-00:00
 
 ### LOAD MODULE ###
-module load amber/20
+module load apps/amber/20
 "
 
 elif [ $machine == 'local' ]
@@ -359,7 +359,7 @@ then
     cd preprod
 
     echo 'starting first minimisation (step 1)'
-    pmemd -O -i 1_min.in\\
+    pmemd.cuda -O -i 1_min.in\\
                 -o out/1_min.out -p ../\$prmtop -c ../\$inpcrd -r out/1_min.rst\\
                 -inf 1_min.info -ref ../\$inpcrd -x out/1_min.nc
 
@@ -379,7 +379,7 @@ then
                 -inf 4_npt.info -ref out/3_npt.rst -x out/4_npt.nc
 
     echo 'starting second minimisation \(step 5\)'
-    pmemd -O -i 5_min.in\\
+    pmemd.cuda -O -i 5_min.in\\
                 -o out/5_min.out -p ../\$prmtop -c out/4_npt.rst -r out/5_min.rst\\
                 -inf 5_min.info -ref out/4_npt.rst -x out/5_min.nc
 
