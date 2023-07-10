@@ -1,0 +1,54 @@
+A NPT simulation for common production-level simulations
+ &cntrl
+    imin=0,          ! No minimization
+    irest=0,         ! This IS NOT a restart of an old MD simulation
+    ntx=1,           ! Velocities from inpcrd are not read
+
+    ! Temperature control
+    ntt=3,           ! Langevin dynamics
+    gamma_ln=1.0,    ! Friction coefficient (ps^-1)
+    temp0=310.15,    ! Target temperature
+
+    ! Potential energy control
+    cut=12.0,        ! nonbonded cutoff, in Angstroms
+    fswitch=10.0,    ! Force-based switching
+
+    ! MD settings
+    nstlim=26000000, ! 1 ns total
+    dt=0.002,        ! time step (ps)
+
+    ! SHAKE
+    ntc=2,           ! Constrain bonds containing hydrogen
+    ntf=2,           ! Do not calculate forces of bonds containing hydrogen
+
+    ! Control how often information is printed
+    ntpr=1000,       ! Print energies every 1000 steps
+    ntwx=50000,      ! Print coordinates every 50000 steps to the trajectory
+    ntwr=10000,      ! Print a restart file every 10K steps (can be less frequent)
+!   ntwv=-1,         ! Uncomment to also print velocities to trajectory
+!   ntwf=-1,         ! Uncomment to also print forces to trajectory
+    ntxo=1,          ! Write ASCII format
+    ioutfm=1,        ! Write NetCDF format (always do this!)
+
+    ! Wrap coordinates when printing them to the same unit cell
+    iwrap=1,
+
+    igamd = 3,          ! GaMD simulation
+    iE = 1,             ! threshold energy to lower bound
+    irest_gamd = 0,     ! no restart
+    ntcmd = 1000000,    ! 1M of cMD, 2 ns
+    ntcmdprep = 200000, ! 200k of preparation cMD, 0.4 ns
+    ntebprep = 800000,  ! 800k of preparation biasing MD steps, 1.6 ns
+    nteb = 25000000,    ! 2.5M biasing MD steps, 50 ns
+    ntave = 200000,     ! 200k steps for calculating avg (approx 4*n_atoms)
+    sigma0P = 6.0,      ! upper limit of standard deviation of 1st potential energy
+    sigma0D = 6.0,      ! upper limit of standard deviation of 2nd potential energy
+
+    ! Set water atom/residue names for SETTLE recognition
+    watnam='WAT',  ! Water residues are named WAT
+    owtnm='O',     ! Water oxygens are named O
+ /
+
+ &ewald
+    vdwmeth = 0,
+ /
