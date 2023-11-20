@@ -276,15 +276,14 @@ then
     echo "#!/bin/bash
 
 #SBATCH --job-name=$jobname
-#SBATCH --partition=LocalQ
+#SBATCH --partition=gpu
 #SBATCH --output=%x.o%j
 #SBATCH --error=%x.e%j
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:1
 
 ### LOAD MODULE ###
-module load amber/20
+module load Amber
 " > script.sh
 
 elif [ $machine == 'slar' ]
