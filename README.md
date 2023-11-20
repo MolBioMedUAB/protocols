@@ -15,3 +15,8 @@ This repo contains a collection of protocols useful for carrying out different t
 ### GaMD (Gaussian accelerated MD)
     - GaMD_equilibration_nvt.mdin & GaMD_equilibration_npt_semiisotropic.mdin: AMBER inputs for running GaMD equilibration in NVT and semiisotropic NPT conditions.
     - GaMD_production_nvt.mdin & GaMD_production_npt_semiisotropic.mdin: AMBER inputs for running GaMD production in NVT and semiisotropic NPT conditions.
+
+## MM-PBSA - Molecular Mechanics Poisson-Boltzmann Surface Area
+
+    - mmpbsa_setup.sh: Bash script for creation of topology files of complex, receptor and ligand (ante-MMPBSA), and calculation of PB Binding energies of a ligand bind inside a receptor. 
+
