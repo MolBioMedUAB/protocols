@@ -1,5 +1,5 @@
 #!/bin/bash
-# Alex Pérez-Sánchez, Oct 2023, MolBioMed (Univ. Autònoma de Barcel)
+# Álex Pérez-Sánchez, Oct 2023, MolBioMed (Univ. Autònoma de Barcelona)
 # Setup for MMPBSA Calculations 
 
 # Default values for options
