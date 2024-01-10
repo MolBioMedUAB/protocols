@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-
+# Alex Pérez-Sánchez, Jan 2024, MolBioMed (Univ. Autònoma de Barcelona)
+# Setup for Steered Molecular Dynamics for Amber 
 import argparse
 import os
 import mdtraj as md
