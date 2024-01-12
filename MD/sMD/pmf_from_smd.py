@@ -47,7 +47,7 @@ def read_input_files(input):
         f = open(file).readlines() # lines 1-3 are the headers and -3-last is the total work done
         data = []
         for l in range(len(f)):
-            if not l.startswith('#'):
+            if not f[l].startswith('#'):
                 data.append(f[l].split())
 
         smds.append(data)
