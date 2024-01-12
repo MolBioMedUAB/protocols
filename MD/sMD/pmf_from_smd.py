@@ -29,6 +29,13 @@ def parser():
                         type=float,
                         )
 
+    parser.add_argument('-ts', '--time_step',
+                        help="Time step (in ns) in which each measure is written in .dat file. Only used in jar amber mode ('-m jar' flag)."
+                        required=False,
+                        default=1,
+                        type=float
+                        )
+
     parser.add_argument('-o', '--output',
                         help='Output files name. Default is \'pmf\'.',
                         default='pmf')
@@ -71,7 +78,7 @@ def read_input_files(input):
     return smds
 
 
-def calculate_2n_order_cumulant(smds, temp=310.15, output='pmf', mode='infe'):
+def calculate_2n_order_cumulant(smds, temp=310.15, output='pmf', mode='infe', timestep=1.0):
 
     beta =1/(0.001987 * temp)
 
@@ -126,7 +133,7 @@ def calculate_2n_order_cumulant(smds, temp=310.15, output='pmf', mode='infe'):
         elif mode.lower() == 'jar':
             try :
                 smd_analysed.append(
-                    [smd_analysed[-1][0]+1, round(avg_F, 2), round(avg_W, 2), round(avg_W_sq, 2), round(cum, 2)]
+                    [smd_analysed[-1][0]+timestep, round(avg_F, 2), round(avg_W, 2), round(avg_W_sq, 2), round(cum, 2)]
                 )
             except IndexError:
                 smd_analysed.append(
