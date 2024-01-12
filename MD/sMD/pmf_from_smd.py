@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import argparse
+from sys import exit
 
 plt.style.use('ggplot')
 
@@ -35,9 +36,22 @@ def parser():
     parser.add_argument('-s', '--show',
                         help='Trigger for previsualise the generated plots',
                         default=False,
-                        action='store_true')
+                        action='store_true'
+                        )
 
-    return parser.parse_args()
+    parser.add_argument('-m', '--amber_mode',
+                        help='AMBER way of performing the sMD simulation. Default is infe [ jar | infe ].',
+                        default='infe',
+                        type=str
+                        )
+    
+    args = parser.parse_args()
+
+    
+    if args.amber_mode.lower() not in ['infe', 'jar']:
+        exit("Selected mode does not exist. Choose between 'jar' and 'infe', depending on the chosen one in AMBER input.")
+
+    return args
 
 def read_input_files(input):
 
@@ -57,7 +71,7 @@ def read_input_files(input):
     return smds
 
 
-def calculate_2n_order_cumulant(smds, temp=310.15, output='pmf'):
+def calculate_2n_order_cumulant(smds, temp=310.15, output='pmf', mode='infe'):
 
     beta =1/(0.001987 * temp)
 
@@ -73,20 +87,30 @@ def calculate_2n_order_cumulant(smds, temp=310.15, output='pmf'):
     works        = []
 
     f_out = open(output + '_processed.csv', 'w')
-
+    
     for l in range(len(smds[0])):
 
         tot_W = 0
         tot_W_sq = 0
         tot_F = 0
         works.append([])
-        for smd in smds:
-            tot_W    += float(smd[l][4])
-            tot_W_sq += float(smd[l][4])**2
-            tot_F    += float(smd[l][3])*(float(smd[l][1])-float(smd[l][2]))
-            works[-1].append(smd[l][4])
 
+        if mode.lower() == 'infe':
+            for smd in smds:
+                tot_W    += float(smd[l][4])
+                tot_W_sq += float(smd[l][4])**2
+                tot_F    += float(smd[l][3])*(float(smd[l][1])-float(smd[l][2]))
+                
+                works[-1].append(smd[l][4])
+                
 
+        elif mode.lower() == 'jar':
+            for smd in smds:
+                tot_W    += float(smd[l][3])
+                tot_W_sq += float(smd[l][3])**2
+                tot_F    += float(smd[l][2])
+                works[-1].append(smd[l][3])
+            
         avg_W = (1/len(smds))*tot_W
         avg_W_sq = (1/len(smds))*tot_W_sq
         avg_F = (1/len(smds))*tot_F
@@ -95,9 +119,19 @@ def calculate_2n_order_cumulant(smds, temp=310.15, output='pmf'):
 
 
 
-        smd_analysed.append(
-            [round(float(smd[l][0])/1000,4), round(avg_F, 2), round(avg_W, 2), round(avg_W_sq, 2), round(cum, 2)]
-        )
+        if mode.lower() == 'infe':
+            smd_analysed.append(
+                [round(float(smd[l][0])/1000,4), round(avg_F, 2), round(avg_W, 2), round(avg_W_sq, 2), round(cum, 2)]
+            )
+        elif mode.lower() == 'jar':
+            try :
+                smd_analysed.append(
+                    [smd_analysed[-1][0]+1, round(avg_F, 2), round(avg_W, 2), round(avg_W_sq, 2), round(cum, 2)]
+                )
+            except IndexError:
+                smd_analysed.append(
+                    [0, round(avg_F, 2), round(avg_W, 2), round(avg_W_sq, 2), round(cum, 2)]
+                )
 
         f_out.write(', '.join([str(v) for v in smd_analysed[-1]]) + '\n')
 
@@ -166,7 +200,7 @@ def main():
     args = parser()
 
     smds = read_input_files(args.input)
-    smd_analysed, output_type, works = calculate_2n_order_cumulant(smds, temp=args.temperature, output=args.output)
+    smd_analysed, output_type, works = calculate_2n_order_cumulant(smds, temp=args.temperature, output=args.output, mode=args.amber_mode)
     #plot_pmf(smd_analysed, output=args.output, show=args.show, output_type=output_type, works=works)
     plot_pmf(smd_analysed, output=args.output, show=args.show, output_type=output_type, works=None)
 
