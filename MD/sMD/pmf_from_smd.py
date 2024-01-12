@@ -44,12 +44,13 @@ def read_input_files(input):
     smds = []
     for file in input:
 
-        f = open(file).readlines()[4:-4] # lines 1-3 are the headers and -3-last is the total work done
-
+        f = open(file).readlines() # lines 1-3 are the headers and -3-last is the total work done
+        data = []
         for l in range(len(f)):
-            f[l] = f[l].split()
+            if not l.startswith('#'):
+                data.append(f[l].split())
 
-        smds.append(f)
+        smds.append(data)
 
     #smds_np = np.array(smds)
 
