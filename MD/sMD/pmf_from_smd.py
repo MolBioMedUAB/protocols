@@ -17,7 +17,7 @@ def parser():
     """
 
     parser.add_argument('-i', '--input',
-                        help='Input .dat files from Amber SMD simulations.',
+                        help='Input .dat files from Amber SMD simulations. If more than one .dat is input, the PMF will be calculated. Otherwise, if only one .dat file is input, the work will be output.',
                         required=True,
                         nargs='+')
 
