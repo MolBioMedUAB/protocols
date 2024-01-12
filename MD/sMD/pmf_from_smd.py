@@ -30,7 +30,7 @@ def parser():
                         )
 
     parser.add_argument('-ts', '--time_step',
-                        help="Time step (in ns) in which each measure is written in .dat file. Only used in jar amber mode ('-m jar' flag)."
+                        help="Time step (in ns) in which each measure is written in .dat file. Only used in jar amber mode ('-m jar' flag).",
                         required=False,
                         default=1,
                         type=float
@@ -207,7 +207,7 @@ def main():
     args = parser()
 
     smds = read_input_files(args.input)
-    smd_analysed, output_type, works = calculate_2n_order_cumulant(smds, temp=args.temperature, output=args.output, mode=args.amber_mode)
+    smd_analysed, output_type, works = calculate_2n_order_cumulant(smds, temp=args.temperature, output=args.output, mode=args.amber_mode, timestep=args.time_step)
     #plot_pmf(smd_analysed, output=args.output, show=args.show, output_type=output_type, works=works)
     plot_pmf(smd_analysed, output=args.output, show=args.show, output_type=output_type, works=None)
 
