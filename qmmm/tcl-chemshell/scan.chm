@@ -1,0 +1,170 @@
+# Creating vars
+global sys_name_id
+
+set structure_type pd_retroHabs_h12a
+set calculation_type scan_Habs
+set frame            8721
+
+set sys_name_id ${calculation_type}_${structure_type}_${frame}
+
+set c_file      opt_${structure_type}_${frame}.c
+set prmtop_file 12LO_${frame}_radDHA_OXY.TIP3P.ff14SB.prmtop
+set inpcrd_file 12LO_${frame}_radDHA_OXY.TIP3P.ff14SB.prmtop
+set pdb_file    opt_${structure_type}_${frame}.pdb
+set localdir    /home/mcanyelles/epoxidation/from_dha/h_abstraction/${frame}/scan_for1_h9a
+
+# Loading files and scripts
+source ./12LO_${frame}_radDHA_OXY.TIP3P.ff14SB_15.0.act_list
+source ./qm_list
+
+## if Picard_old
+    #source /QFsoft/applic/CHEMSHELL/3.7/intel2017-serial/src/interface_turbomole/turbomole.tcl
+    #source /QFsoft/applic/CHEMSHELL/3.7/intel2017-serial/src/interface_amber/parse_amber.tcl
+# if Picard
+    source /shared/software/easybuild/common/software/Chemshell/3.7/src/interface_turbomole/turbomole.tcl
+    source /shared/software/easybuild/common/software/Chemshell/3.7/src/interface_amber/parse_amber.tcl
+# if CSUC
+    #source /home/uabqut17/soft/chemshell-3.7/src/interface_amber/parse_amber.tcl
+    #source /home/uabqut17/soft/chemshell-3.7/src/interface_turbomole/turbomole.tcl
+
+
+# Defining residues for HDLC
+    set pdbresidues [ pdb_to_res "${pdb_file}" ]
+    set fil [open "pdbresidues" {RDWR CREAT TRUNC}]
+    puts $fil "set pdbresidues [ list $pdbresidues ]"
+    close $fil
+
+# Set atom numbers
+    set OH   10597
+    set C9   10620
+    set H9A  10621
+    set H9B  10622
+
+# set target H and C
+    set H $H9A
+
+
+# Set initial counter
+    set k 0
+
+    if { $k == 0 } {
+        # Create point 0 of the scan from .c file
+        exec cp $c_file ${sys_name_id}_0.c
+
+        # Node file
+        set t [ open "PES.plt" { RDWR CREAT TRUNC } ]
+        puts $t "j, rc, E, deltaE, d_CH, d_HOcof, rc_m"
+        close $t
+        # Home file
+        set t [ open "${localdir}/PES.plt" { RDWR CREAT TRUNC } ]
+        puts $t "j, rc, E, deltaE, d_CH, d_HOcof, rc_m"
+        close $t
+    } else {·
+        set energy_0 
+    }
+
+
+# Set initial coordinates for scan
+    set rc_CH [ interatomic_distance coords=./${sys_name_id}_${k}.c i=$C9 j=$H  ]
+    set rc_HO [ interatomic_distance coords=./${sys_name_id}_${k}.c i=$H  j=$OH ]
+    set rc_i [ expr { $rc_CH - $rc_HO } ]
+    set rc_f [ expr { 4.0 * 1.889726 } ]
+    set step [ expr { 0.1 * 1.889726 } ]
+
+# Start performing QM/MM calculation
+
+for { set rc $rc_i } { $rc < $rc_f } { set rc [ expr $rc + $step ] } {
+    # Update counter
+    set j [ expr { $k + 1 } ]
+
+    # Reinitalise internal energy variable
+    matrix dl-find.energy new volatile
+
+    # Start QM/MM calculation for step
+    dl-find coords=${sys_name_id}_${k}.c \
+            result=${sys_name_id}_${j}.c \
+            residues= $pdbresidues \
+            coordinates= hdlc \
+            optimizer= lbfgs \
+            active_atoms= $act \
+            maxene= 100000 \
+            tolerance= 0.001 \
+            maxstep= 0.1 \
+            lbfgs_mem= 1000 \
+            list_option= none \
+            microiterative= yes \
+            inner_residues= { 360 365 540 544 663 664 665 666 } \
+            restraints= [ list [ list bonddiff2 $C9 $H $H $OH $rc 3.0 ] ] \
+            theory= hybrid : [ list \
+                    coupling= shift \
+                    debug= no \
+                    qm_region= $qm_list \
+                    qm_theory= turbomole : [ list \
+                            hamiltonian= b3lyp \
+                            scftype= uhf \
+                            basisspec= { { lanl2dz fe } { 6-31g* { h c n o } } } \
+                            maxcyc= 1000 \
+                            charge= 1 \
+                            mult= 6 ] \
+                    mm_theory= dl_poly : [ list \
+                            conn= $c_file \
+                            list_option= none \
+                            debug= no \
+                            scale14= [ list [ expr 1 /1.2 ] 0.5 ] \
+                            amber_prmtop_file=$prmtop_file ] \
+        ] \
+
+    # Convert .c into .pdb
+    read_pdb  file=${pdb_file} coords=dummy.coords
+    write_pdb file=./${sys_name_id}_${j}.pdb coords=./${sys_name_id}_${j}.c
+
+    puts stdout "\nThe new coordinates file is: ${sys_name_id}_${j}.c\n"
+    # Calculate relative energy
+    set final_energy [expr { [ get_matrix_element matrix=dl-find.energy indices= {0 0 } format=%12.12f ] * 627.509 } ]
+    puts stdout "\The energy of the point is ${final_energy}"
+
+        # Save first energy
+        if { $k == 0 } {
+            set energy_0 $final_energy 
+        }
+
+    set delta [ expr { $final_energy - $energy_0 } ]
+
+    # Measure distances
+    set rc_   [ expr { $rc * 0.5291772 } ]
+    set d_CH  [ interatomic_distance coords=./${sys_name_id}_${j}.c i=$C9 j=$H  ]
+    set d_CH_ [ expr { $d_CH * 0.5291772 } ]
+    set d_HO  [ interatomic_distance coords=./${sys_name_id}_${j}.c i=$H  j=$OH ]
+    set d_HO_ [ expr { $d_HO * 0.5291772 } ]
+    set rc_m  [ expr { $d_CH_ - $d_HO_ } ]
+
+    # Save data to PESs files
+    set PES   [ open "PES.plt" {RDWR APPEND} ]
+    puts $PES [ format "%s, %-5.5f, %-5.5f, %-5.5f, %-5.5f, %-5.5f, %-5.5f" \
+        $j $rc_ $final_energy $delta $d_CH_ $d_HO_ $rc_m ]
+    close $PES
+
+    set PES   [ open "${localdir}/PES.plt" {RDWR APPEND} ]
+    puts $PES [ format "%s, %-5.5f, %-5.5f, %-5.5f, %-5.5f, %-5.5f, %-5.5f" \
+        $j $rc_ $final_energy $delta $d_CH_ $d_HO_ $rc_m ]
+    close $PES
+
+    # Delete energy object
+    delete_object dl-find.energy
+
+    # Copy files to localdir
+    exec cp -f ${sys_name_id}_${j}.c ${localdir}/structures
+    exec cp -f ${sys_name_id}_${j}.pdb ${localdir}/structures
+    exec cp -f PES.plt ${localdir}/PES_${sys_name_id}.csv
+
+
+    # Increase counter
+    incr k
+
+}
+
+# End script
+times
+
+exit
+
