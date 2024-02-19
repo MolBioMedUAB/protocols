@@ -47,7 +47,7 @@ A NPT simulation for common production-level simulations
     ! GaMD parameters 
     igamd = 3,       ! GaMD simulation
     iE = 1,          ! threshold energy to lower bound
-    irest_gamd = 0,  ! no restart
+    irest_gamd = 1,  ! restart from eq
     ntcmdprep = 0,   ! 0 preparation cMD steps
     ntcmd = 0,       ! 0 cMD steps
     ntebprep = 0,    ! 0 preparation biasing MD steps
