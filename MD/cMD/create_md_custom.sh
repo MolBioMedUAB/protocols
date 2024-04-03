@@ -281,6 +281,7 @@ then
 #SBATCH --error=%x.e%j
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
+#SBATCH --gres=gpu:1
 
 ### LOAD MODULE ###
 module load Amber
