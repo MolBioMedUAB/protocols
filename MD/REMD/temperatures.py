@@ -100,7 +100,7 @@ def save_temperatures(temperatures):
 
 def main():
 
-    args = parser()
+    args = parse()
 
     temperatures = calculate_temperatures(args)
 
