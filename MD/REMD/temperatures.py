@@ -104,10 +104,10 @@ def save_temperatures(temperatures):
 
     with open('temperatures.dat', 'w') as file:
 
-        file.write("TEMPERATURE")
-        file.write("Temperature Replica Exchange")
+        file.write("TEMPERATURE\n")
+        file.write("Temperature Replica Exchange\n")
         for temperature in temperatures:
-            file.write(str(temperature))
+            file.write(str(temperature) + '\n')
 
 
 def main():
