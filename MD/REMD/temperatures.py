@@ -83,7 +83,12 @@ def calculate_temperatures(args):
 
     temperatures = []
     for n in range(n_tot):
-         temperatures.append(round(T_min * math.e**(A*n), args.round_temperatures))
+        if n == 0:
+            temperature = T_min
+        elif n == n_tot:
+            temperature = T_max
+        else :
+            temperatures.append(round(T_min * math.e**(A*n), args.round_temperatures))
 
     if args.verbose or args.no_output_file:
         for n in range(n_tot):
