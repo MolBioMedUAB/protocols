@@ -92,7 +92,7 @@ def calculate_temperatures(args):
 
     if args.verbose or args.no_output_file:
         for n in range(n_tot):
-            print(f'The temperature for replica {n+1} is ', temperatures[n])
+            print(f'The temperature for replica {n+1} is:', temperatures[n])
 
     return temperatures
 
