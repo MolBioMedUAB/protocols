@@ -35,7 +35,7 @@ def parse():
                         help='Deactivates the writing of the temperatures.dat file',
                         required=False,
                         action='store_true',
-                        default='False',
+                        default=False,
                        )
 
     parser.add_argument('-r', '--round_temperatures',
