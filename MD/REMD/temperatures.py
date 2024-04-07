@@ -102,12 +102,14 @@ def save_temperatures(temperatures):
         Function for saving the temperatures.dat file for AmberTools genremdfiles.py
     """
 
-    with open('temperatures.dat', 'w') as file:
+    file = open('temperatures.dat', 'w')
 
-        file.write("TEMPERATURE")
-        file.write("Temperature Replica Exchange")
-        for temperature in temperatures:
-            file.write(temperature)
+    file.write("TEMPERATURE")
+    file.write("Temperature Replica Exchange")
+    for temperature in temperatures:
+        file.write(temperature)
+
+    file.close()
 
 
 def main():
