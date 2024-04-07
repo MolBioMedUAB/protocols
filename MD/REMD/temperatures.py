@@ -79,7 +79,7 @@ def calculate_temperatures(args):
     A = (math.log(T_max/T_min))/(n_tot-1)
 
     if args.verbose:
-        print('The A constant is', a)
+        print('The A constant is:', A)
 
     temperatures = []
     for n in range(n_tot):
