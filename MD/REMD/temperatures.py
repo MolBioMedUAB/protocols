@@ -42,7 +42,7 @@ def parse():
                        help='Round to units, tens or hundreds',
                        required=False,
                        default=10,
-                       choice=[1, 10, 100],
+                       choices=[1, 10, 100],
                        )
 
     args = parser.parse_args()
