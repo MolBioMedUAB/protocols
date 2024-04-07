@@ -43,6 +43,7 @@ def parse():
                        required=False,
                        default=10,
                        choices=[1, 10, 100],
+                       type=int
                        )
 
     args = parser.parse_args()
