@@ -42,13 +42,19 @@ def parse():
                        help='Round to units, tens or hundreds',
                        required=False,
                        default=10,
-                       choices=[1, 10, 100],
+                       choices=[0, 1, 10, 100],
                        type=int
                        )
 
     args = parser.parse_args()
 
-    if args.round_temperatures == 10:
+    if args.round_temperatures == 0:
+        args.round_temperatures = 1
+        
+    elif args.round_temperatures == 1:
+        args.round_temperatures = 0
+        
+    elif args.round_temperatures == 10:
         args.round_temperatures = -1
 
     elif args.round_temperatures == 100:
