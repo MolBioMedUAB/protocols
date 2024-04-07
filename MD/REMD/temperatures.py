@@ -64,9 +64,6 @@ def calculate_temperatures(args):
     DEFINITION:
         Equations for the calculation of temperatures of the intermediate replicas for a REMD simulation
     """
-
-    def t_i(T_min, a, n):
-         return T_min * math.e**(a*n
   
     T_max = args.max_temperature
     T_min = args.min_temperature
