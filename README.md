@@ -19,5 +19,6 @@ This repo contains a collection of protocols useful for carrying out different t
 - [pmf_from_smd.py](https://github.com/MolBioMedUAB/protocols/blob/main/MD/sMD/pmf_from_smd.py): Python script for calculating PMF from several sMD simulations.
 
 ## MM-PBSA - Molecular Mechanics Poisson-Boltzmann Surface Area
-- [mmpbsa_setup.sh](https://github.com/MolBioMedUAB/protocols/blob/main/MM-PBSA/mmpbsa_setup.sh): Bash script for creation of topology files of complex, receptor and ligand (ante-MMPBSA), and calculation of PB Binding energies of a ligand bind inside a receptor. 
+- [mmpbsa_setup.sh](https://github.com/MolBioMedUAB/protocols/blob/main/MM-PBSA/mmpbsa_setup.sh): Bash script for creation of topology files of complex, receptor and ligand (ante-MMPBSA), and calculation of PB Binding energies of a ligand bind inside a receptor.
+- [entropy.sh](https://github.com/MolBioMedUAB/protocols/blob/main/MM-PBSA/entropy.sh): Bash script for calculation from MM-PBSA results entropy correction of the binding energy. 
 
