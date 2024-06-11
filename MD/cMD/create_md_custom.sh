@@ -407,6 +407,8 @@ then
     pmemd.cuda -O -i 10_nvt.in\\
                 -o out/10_nvt.out -p ../\$prmtop -c out/9_npt.rst -r out/10_nvt.rst\\
                 -inf 10_nvt.info -ref out/9_npt.rst -x out/10_nvt.nc
+
+    cd ..
 fi
 
 if [ \$prod -eq 1 ];
