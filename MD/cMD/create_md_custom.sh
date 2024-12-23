@@ -284,7 +284,7 @@ then
 #SBATCH --gres=gpu:1
 
 ### LOAD MODULE ###
-source ~/.bashrc
+source /etc/profile.d/lmod.sh
 module load Amber
 " > script.sh
 
