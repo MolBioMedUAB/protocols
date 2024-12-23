@@ -284,6 +284,7 @@ then
 #SBATCH --gres=gpu:1
 
 ### LOAD MODULE ###
+source ~/.bashrc
 module load Amber
 " > script.sh
 
