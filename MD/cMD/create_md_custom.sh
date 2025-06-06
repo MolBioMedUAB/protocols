@@ -13,13 +13,12 @@ print_usage() {
   printf "Usage: ...\n"
   printf '%b\n' "\e[1m\t -c COORDINATES:\tspecify .inpcrd file\e[0m"
   printf '%b\n' "\t -l LENGTH:\t\tspecify the length of the production (in integer ns) [\e[1m200\e[0m]"
-  printf '%b\n' "\t -m MACHINE:\t\tspecify the type of machine to use [csuc|local|mirfak|slar|slar-gorn03|\e[1mSLURM\e[0m]"
+  printf '%b\n' "\t -m MACHINE:\t\tspecify the type of machine to use [csuc|local|picard|\e[1mSLURM\e[0m]"
   printf '%b\n' "\e[1m\t -p PARAMETERS:\t\tspecify .prmtop file\e[0m"
   printf '%b\n' "\e[1m\t -r LAST_RESIDUE:\tspecify the number of the last residue from the protein and substrate, optionally\e[0m"
   printf '%b\n' "\t -t TEMPERATURE:\tspecify temperature (in K) [\e[1m300\e[0m]"
   printf "\n"
   printf '%b\n' "\e[3mBold indicates manatory argument or default value\e[0m"
-  printf '%b\n' "\e[3mslar-gorn03 machine uses AMBER18 instead of AMBER20\e[0m"
   printf "\n"
   printf '%b\n' "\e[2mExample:\e[0m"
   printf '%b\n' "\e[2m\t setup_md.sh -t 310 -p file.prmtop -c file.inpcrd -r 555\e[0m"
@@ -257,21 +256,15 @@ then
 #SBATCH --partition=gpu
 #SBATCH --output=%x.o%j
 #SBATCH --error=%x.e%j
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
+#SBATCH -n 32
 #SBATCH -t 10-00:00
 
 ### LOAD MODULE ###
-module load apps/amber/20
-"
-
+module load amber/24
+" > script.sh
+  
 elif [ $machine == 'local' ]
-then
-    echo "#! /bin/bash
-export CUDA_VISIBLE_DEVICES=0" > script.sh
-
-elif [ $machine == 'mirfak' ]
 then
     echo "#!/bin/bash
 
@@ -284,42 +277,24 @@ then
 #SBATCH --gres=gpu:1
 
 ### LOAD MODULE ###
-source /etc/profile.d/lmod.sh
 module load Amber
 " > script.sh
 
-elif [ $machine == 'slar' ]
+elif [ $machine == 'picard' ]
 then
     echo "#!/bin/bash
 
 #SBATCH --job-name=$jobname
-#SBATCH --partition=gorn4
+#SBATCH --partition=gorn1
 #SBATCH --output=%x.o%j
 #SBATCH --error=%x.e%j
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
+#SBATCH -n 1
+#SBATCH -t 30-00:00
 
 ### LOAD MODULE ###
-module load gcc/4.8.5/openmpi/4.1.1/cuda/11.1.1/amber/20.gorn04
+ml Amber/24-foss-2023a-AmberTools-24-CUDA-11.8.0
 " > script.sh
-
-elif [ $machine == 'slar-gorn03' ]
-then
-    echo "#!/bin/bash
-
-#SBATCH --job-name=$jobname
-#SBATCH --partition=gorn3
-#SBATCH --output=%x.o%j
-#SBATCH --error=%x.e%j
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:1
-
-### LOAD MODULE ###
-module load gcc/4.8.5/openmpi/2.0.1/cuda/8.0/amber/18
-" > script.sh
-
 
 elif [ $machine == 'slurm' ]
 then
@@ -360,7 +335,7 @@ then
     cd preprod
 
     echo 'starting first minimisation (step 1)'
-    pmemd.cuda -O -i 1_min.in\\
+    pmemd -O -i 1_min.in\\
                 -o out/1_min.out -p ../\$prmtop -c ../\$inpcrd -r out/1_min.rst\\
                 -inf 1_min.info -ref ../\$inpcrd -x out/1_min.nc
 
@@ -380,7 +355,7 @@ then
                 -inf 4_npt.info -ref out/3_npt.rst -x out/4_npt.nc
 
     echo 'starting second minimisation \(step 5\)'
-    pmemd.cuda -O -i 5_min.in\\
+    pmemd -O -i 5_min.in\\
                 -o out/5_min.out -p ../\$prmtop -c out/4_npt.rst -r out/5_min.rst\\
                 -inf 5_min.info -ref out/4_npt.rst -x out/5_min.nc
 
